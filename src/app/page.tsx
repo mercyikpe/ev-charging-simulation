@@ -1,113 +1,218 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import React, { useState } from 'react';
+import { simulateChargingStations, ChargePoint } from '@/utils/SimulationLogic';
+import SimulationControls from '@/components/SimulationControls';
+import SimulationChart from '@/components/SimulationChart';
+import ConcurrencyFactorChart from '@/components/charts/ConcurrencyFactorChart';
+import ChargingEventsStats from '@/components/ChargingEventStats';
+import SimulationResults from '@/components/SimulationResults';
+
+const Home: React.FC = () => {
+  const [chargePoints, setChargePoints] = useState<ChargePoint[]>([
+    { count: 20, power: 11 },
+  ]);
+  const [arrivalProbabilityMultiplier, setArrivalProbabilityMultiplier] =
+    useState(100);
+  const [carConsumption, setCarConsumption] = useState(18);
+  const [powerUsage, setPowerUsage] = useState<number[]>([]);
+  const [timeLabels, setTimeLabels] = useState<string[]>([]);
+  const [totalEnergy, setTotalEnergy] = useState<number>(0);
+  const [actualMaxDemand, setActualMaxDemand] = useState<number>(0);
+  const [theoreticalMaxDemand, setTheoreticalMaxDemand] = useState<number>(0);
+  const [concurrencyFactor, setConcurrencyFactor] = useState<number>(0);
+  const [totalChargingEvents, setTotalChargingEvents] = useState<number[]>([]);
+  const [rangeResults, setRangeResults] = useState<any[]>([]);
+  const [chargingValues, setChargingValues] = useState<number[][]>([]);
+
+  const [showChart, setShowChart] = useState(false);
+  const [showRangeResults, setShowRangeResults] = useState(false);
+
+  const runSimulation = () => {
+    const {
+      powerUsage,
+      timeLabels,
+      totalEnergy,
+      actualMaxDemand,
+      theoreticalMaxDemand,
+      concurrencyFactor,
+      totalChargingEvents,
+    } = simulateChargingStations(
+      chargePoints,
+      arrivalProbabilityMultiplier,
+      carConsumption
+    );
+    setPowerUsage(powerUsage);
+    setTimeLabels(timeLabels);
+    setTotalEnergy(totalEnergy);
+    setActualMaxDemand(actualMaxDemand);
+    setTheoreticalMaxDemand(theoreticalMaxDemand);
+    setConcurrencyFactor(concurrencyFactor);
+    setTotalChargingEvents(totalChargingEvents);
+    setChargingValues(chargingValues);
+    setShowChart((prev) => !prev);
+  };
+
+  const runSimulationForDifferentChargePoints = () => {
+    const results = [];
+    for (let i = 1; i <= 30; i++) {
+      const chargePoints = [{ count: i, power: 11 }];
+      const { actualMaxDemand, theoreticalMaxDemand, concurrencyFactor } =
+        simulateChargingStations(
+          chargePoints,
+          arrivalProbabilityMultiplier,
+          carConsumption
+        );
+      results.push({
+        chargePoints: i,
+        actualMaxDemand,
+        theoreticalMaxDemand,
+        concurrencyFactor,
+      });
+    }
+    setRangeResults(results);
+    setShowRangeResults((prev) => !prev);
+  };
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
+    <>
+      <div className="p-[5%] w-full bg-gray-200 min-h-screen">
+        <h1 className="text-2xl font-bold mb-10 text-center">
+          EV Charging Simulation
+        </h1>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+          <div className="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
+            <SimulationControls
+              chargePoints={chargePoints}
+              setChargePoints={setChargePoints}
+              arrivalProbabilityMultiplier={arrivalProbabilityMultiplier}
+              setArrivalProbabilityMultiplier={setArrivalProbabilityMultiplier}
+              carConsumption={carConsumption}
+              setCarConsumption={setCarConsumption}
+              runSimulation={runSimulation}
             />
-          </a>
+
+            <button
+              onClick={runSimulationForDifferentChargePoints}
+              className="px-4 py-2 bg-green-700 text-white rounded mt-4 block"
+            >
+              Run Simulation for 1-30 Charge Points
+            </button>
+          </div>
+
+          {showChart && powerUsage.length > 0 && (
+            <>
+              <SimulationResults
+                totalEnergy={totalEnergy}
+                theoreticalMaxDemand={theoreticalMaxDemand}
+                actualMaxDemand={actualMaxDemand}
+                concurrencyFactor={concurrencyFactor}
+              />
+
+              <ChargingEventsStats totalChargingEvents={totalChargingEvents} />
+            </>
+          )}
         </div>
+
+        {showChart && powerUsage.length > 0 && (
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div className="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md lg:col-span-2">
+              <div className="flex justify-center my-8">
+                <p className="font-medium">
+                  Charging Simulation Chart Charging Events Over Time
+                </p>
+              </div>
+
+              <div>
+                <SimulationChart
+                  powerUsage={powerUsage}
+                  timeLabels={timeLabels}
+                  theoreticalMaxDemand={theoreticalMaxDemand}
+                  actualMaxDemand={actualMaxDemand}
+                  chargingValues={chargingValues}
+                  totalChargingEvents={totalChargingEvents}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {showRangeResults && rangeResults.length > 0 && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <div className="p-6 relative flex flex-col min-w-0 mb-4 lg:mb-0 break-words bg-gray-50 shadow-lg rounded">
+              <div className="rounded-t mb-0 px-0 border-0">
+                <div className="flex flex-wrap items-center px-4 py-2">
+                  <div className="relative w-full max-w-full flex-grow flex-1">
+                    <h3 className="font-semibold text-base text-gray-900 dark:text-gray-50">
+                      Range Simulation Results
+                    </h3>
+                  </div>
+                </div>
+                <div className="block w-full overflow-x-auto">
+                  <table className="items-center w-full bg-transparent border-collapse">
+                    <thead>
+                      <tr>
+                        <th className="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                          Charge Points
+                        </th>
+                        <th className="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                          Actual Max Demand (kW)
+                        </th>
+                        <th className="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                          Theoretical Max Demand (kW)
+                        </th>
+                        <th className="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left min-w-140-px">
+                          Concurrency Factor (%)
+                        </th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      {rangeResults.map((result, index) => (
+                        <tr key={index}>
+                          <td className="py-2 px-4 border-b border-b-gray-50">
+                            {result.chargePoints}
+                          </td>
+                          <td className="py-2 px-4 border-b border-b-gray-50">
+                            {result.actualMaxDemand.toFixed(2)}{' '}
+                            <span className="text-gray-700 text-xs">kW</span>
+                          </td>
+                          <td className="py-2 px-4 border-b border-b-gray-50">
+                            {result.theoreticalMaxDemand.toFixed(2)}{' '}
+                            <span className="text-gray-700 text-xs">kW</span>
+                          </td>
+                          <td className="py-2 px-4 border-b border-b-gray-50">
+                            {(result.concurrencyFactor * 100).toFixed(2)}{' '}
+                            <span className="text-gray-700 text-xs">%</span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div className="relative flex flex-col min-w-0 mb-4 lg:mb-0 ">
+              <div className="p-6 break-words rounded mb-0 px-0 border-0 bg-gray-50 shadow-lg">
+                <div className="flex flex-wrap items-center px-4 py-2">
+                  <div className="relative w-full max-w-full flex-grow flex-1">
+                    <h3 className="font-semibold text-base text-gray-900 dark:text-gray-50">
+                      Concurrency chart (1 - 30 charge port)
+                    </h3>
+                  </div>
+                </div>
+                <div className="block w-full overflow-x-auto">
+                  <ConcurrencyFactorChart rangeResults={rangeResults} />
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
-
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+    </>
   );
-}
+};
+
+export default Home;

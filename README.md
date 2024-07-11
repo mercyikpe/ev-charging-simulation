@@ -14,6 +14,16 @@ pnpm dev
 bun dev
 ```
 
+
+### Areas where your solution meets or exceeds the challenge:
+
+- Implementation of the core simulation logic
+- Calculation of required metrics (energy consumed, max demands, concurrency factor)
+- Frontend visualization of inputs and outputs
+- Ability to run simulations for different numbers of chargepoints
+- UI for creating different types of chargepoints
+- calculate the total energy consumed, theoretical maximum power demand, actual maximum power demand, and concurrency factor
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
