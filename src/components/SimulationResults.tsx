@@ -1,4 +1,3 @@
-// components/SimulationResults.tsx
 import React from 'react';
 
 interface SimulationResultsProps {

@@ -221,8 +221,8 @@ const SimulationChart: React.FC<SimulationChartProps> = ({
         </div>
       </div>
 
-      <div className='mx-auto w-full lg:w-2/3'>
-      <Line data={getChartData()} options={options} />
+      <div className="mx-auto w-full lg:w-2/3">
+        <Line data={getChartData()} options={options} />
       </div>
     </>
   );

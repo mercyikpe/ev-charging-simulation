@@ -1,6 +1,15 @@
+This project simulates the charging behavior of electric vehicles (EVs) at charging stations over a year. 
+<br/>
+It aims to determine key metrics such as 
+- total energy consumed
+- theoretical maximum power demand
+- actual maximum power demand
+- concurrency factor for different numbers of charging stations.
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+## EV Charging Simulation
+
 
 First, run the development server:
 

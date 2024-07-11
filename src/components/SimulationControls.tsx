@@ -88,7 +88,7 @@ const SimulationControls: React.FC<SimulationControlsProps> = ({
             className="p-2 border rounded mr-6 w-1/3"
             min="1"
           />
-          
+
           <button
             onClick={addChargePoint}
             className="inline-block p-1 rounded bg-emerald-500/10 text-emerald-500 font-medium text-[12px] leading-none"

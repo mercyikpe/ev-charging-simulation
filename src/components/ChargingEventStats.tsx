@@ -1,4 +1,3 @@
-// components/ChargingEventsStats.tsx
 import React from 'react';
 
 interface ChargingEventsStatsProps {

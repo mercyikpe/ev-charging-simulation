@@ -1,4 +1,3 @@
-// components/charts/ConcurrencyFactorChart.tsx
 import React from 'react';
 import { Line } from 'react-chartjs-2';
 
@@ -9,7 +8,9 @@ interface ConcurrencyFactorChartProps {
   }>;
 }
 
-const ConcurrencyFactorChart: React.FC<ConcurrencyFactorChartProps> = ({ rangeResults }) => {
+const ConcurrencyFactorChart: React.FC<ConcurrencyFactorChartProps> = ({
+  rangeResults,
+}) => {
   const data = {
     labels: rangeResults.map((result) => result.chargePoints),
     datasets: [
