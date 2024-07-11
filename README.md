@@ -1,6 +1,6 @@
 ## EV Charging Simulation
 
-This project is simulates the charging behavior of electric vehicles (EVs) at charging stations over a year.
+This project simulates the charging behavior of electric vehicles (EVs) at charging stations over a year.
 
 <br/>
 
@@ -13,7 +13,7 @@ It aims to determine key metrics such as :
 
 ## Live preview - Deployed on Vercel
 
-This project responsive and is deployed on Vercel, it can be viewed live [ev-charging-simulation.vercel.app](https://ev-charging-simulation.vercel.app/).
+This project is responsive and it is deployed on Vercel, it can be viewed live [ev-charging-simulation.vercel.app](https://ev-charging-simulation.vercel.app/).
 
 
 ## Local view 
@@ -36,7 +36,7 @@ Then open project url on your browser.
 ### Tech used
 - NextJS
 - ReactJS
-- tailwindCSS
+- TailwindCSS
 - Jest
 - Chart.js
 - React Charts
@@ -50,22 +50,19 @@ Then open project url on your browser.
 
 - Calculates total energy consumption
 - theoretical and actual maximum power demand 
-- concurrency facto
+- concurrency factor
 
 
 #### User Interface:
 
 - Allows users to set parameters such as the number of charge points, arrival probability multiplier, and car consumption.
 
-- Displays simulation results and charts for better visualization of data.
-
-
 #### Visualization:
 I used a mix of tables and charts to visualize the outputs.
 
 ##### charts
 
-- SimulationChart <br />
+- Simulation Chart <br />
 Provide a visualization of the power usage and charging events over time
 
 ###### Features:
