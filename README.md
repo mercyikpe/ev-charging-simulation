@@ -1,55 +1,106 @@
-This project simulates the charging behavior of electric vehicles (EVs) at charging stations over a year. 
+## EV Charging Simulation
+
+This project is simulates the charging behavior of electric vehicles (EVs) at charging stations over a year.
+
 <br/>
-It aims to determine key metrics such as 
+
+It aims to determine key metrics such as :
 - total energy consumed
 - theoretical maximum power demand
 - actual maximum power demand
 - concurrency factor for different numbers of charging stations.
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## EV Charging Simulation
+## Live preview - Deployed on Vercel
+
+This project responsive and is deployed on Vercel, it can be viewed live [ev-charging-simulation.vercel.app](https://ev-charging-simulation.vercel.app/).
 
 
-First, run the development server:
+## Local view 
+
+First:
+- Install necessary dependencies
+
+```bash
+npm install
+```
+
+- Serve the project
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
+Then open project url on your browser.
 
 
-### Areas where your solution meets or exceeds the challenge:
+### Tech used
+- NextJS
+- ReactJS
+- tailwindCSS
+- Jest
+- Chart.js
+- React Charts
 
-- Implementation of the core simulation logic
-- Calculation of required metrics (energy consumed, max demands, concurrency factor)
-- Frontend visualization of inputs and outputs
-- Ability to run simulations for different numbers of chargepoints
-- UI for creating different types of chargepoints
-- calculate the total energy consumed, theoretical maximum power demand, actual maximum power demand, and concurrency factor
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Key Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+ #### Simulation of Charging Stations:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- Simulates up to 30 charging points with specified power over a year in 15-minute intervals.
 
-## Learn More
+- Calculates total energy consumption
+- theoretical and actual maximum power demand 
+- concurrency facto
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+#### User Interface:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- Allows users to set parameters such as the number of charge points, arrival probability multiplier, and car consumption.
 
-## Deploy on Vercel
+- Displays simulation results and charts for better visualization of data.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+#### Visualization:
+I used a mix of tables and charts to visualize the outputs.
+
+##### charts
+
+- SimulationChart <br />
+Provide a visualization of the power usage and charging events over time
+
+###### Features:
+- View Modes: Allows the user to view data in different time ranges: day, week, month, and year.
+
+- Chart Types: Provides different views of the data:
+
+- Power Usage: Shows the overall power usage over the selected time range.
+
+- Charging Values: Displays the power usage for each individual charge point.
+
+- Charging Events: Shows the number of charging events over the selected time range.
+
+- Dynamic Data: The chart data dynamically updates based on the selected view mode and chart type.
+
+- Visualization: Uses the  **chart.js**  and  **react-chart** library to render the line charts.
+
+
+
+##### Concurrency Factor Chart
+
+Visualizes the concurrency factor (the ratio of actual maximum demand to theoretical maximum demand) for different numbers of charge points.
+
+###### Features:
+
+- Dynamic Data: Displays the concurrency factor for a range of charge points from 1 to 30.
+
+- Responsive Design: Adjusts the chart size based on the viewport for better visualization.
+
+
+#### Testing:
+Unit tests are written to test that the calculations for total energy consumption, theoretical and actual maximum power demand, and concurrency factor are correct.
+
+- To run the tests
+
+```bash
+npm test
+```

@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface ChargePoint {
   count: number;
   power: number;
 }
 
-interface SimulationControlsProps {
+interface SimulationInputsProps {
   chargePoints: ChargePoint[];
   setChargePoints: (value: ChargePoint[]) => void;
   arrivalProbabilityMultiplier: number;
@@ -15,7 +15,7 @@ interface SimulationControlsProps {
   runSimulation: () => void;
 }
 
-const SimulationControls: React.FC<SimulationControlsProps> = ({
+const SimulationInputs: React.FC<SimulationInputsProps> = ({
   chargePoints,
   setChargePoints,
   arrivalProbabilityMultiplier,
@@ -32,7 +32,7 @@ const SimulationControls: React.FC<SimulationControlsProps> = ({
   const addChargePoint = () => {
     setChargePoints([...chargePoints, newChargePoint]);
     setNewChargePoint({ count: 1, power: 11 });
-  };
+    };
 
   const removeChargePoint = (index: number) => {
     const updatedChargePoints = [...chargePoints];
@@ -133,10 +133,10 @@ const SimulationControls: React.FC<SimulationControlsProps> = ({
         }`}
         disabled={chargePoints.length === 0}
       >
-        Run Simulation chart
+        Run Simulation
       </button>
     </>
   );
 };
 
-export default SimulationControls;
+export default SimulationInputs;

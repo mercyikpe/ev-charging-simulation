@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react';
 import { simulateChargingStations, ChargePoint } from '@/utils/SimulationLogic';
-import SimulationControls from '@/components/SimulationControls';
-import SimulationChart from '@/components/SimulationChart';
+import SimulationInputs from '@/components/SimulationInputs';
+import SimulationChart from '@/components/charts/SimulationChart';
 import ConcurrencyFactorChart from '@/components/charts/ConcurrencyFactorChart';
 import ChargingEventsStats from '@/components/ChargingEventStats';
 import SimulationResults from '@/components/SimulationResults';
@@ -71,7 +71,13 @@ const Home: React.FC = () => {
       });
     }
     setRangeResults(results);
+
     setShowRangeResults((prev) => !prev);
+  };
+
+
+  const toggleChart = () => {
+    setShowChart((prev) => !prev);
   };
 
   return (
@@ -83,7 +89,7 @@ const Home: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
           <div className="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
-            <SimulationControls
+            <SimulationInputs
               chargePoints={chargePoints}
               setChargePoints={setChargePoints}
               arrivalProbabilityMultiplier={arrivalProbabilityMultiplier}
